@@ -114,18 +114,16 @@ for i in range(0, resolution_x, step):
 
 pygame.display.flip()
 
-'''
-dot0 = [center_field_x + step * 0, center_field_y + step * 0]
-dot1 = [center_field_x + step * 0, center_field_y - step * 1]
-dot2 = [center_field_x + step * 1, center_field_y - step * 1]
-dot3 = [center_field_x - step * 1, center_field_y + step * 0]
-dot4 = [center_field_x + step * 0, center_field_y + step * 1]
-
-r_pentomino = [dot0, dot1, dot2, dot3, dot4]
-
-for i in r_pentomino:
-    pygame.draw.circle(screen, [0, 0, 0], i, 15, 0)
-'''
+# dot0 = [center_field_x + step * 0, center_field_y + step * 0]
+# dot1 = [center_field_x + step * 0, center_field_y - step * 1]
+# dot2 = [center_field_x + step * 1, center_field_y - step * 1]
+# dot3 = [center_field_x - step * 1, center_field_y + step * 0]
+# dot4 = [center_field_x + step * 0, center_field_y + step * 1]
+#
+# r_pentomino = [dot0, dot1, dot2, dot3, dot4]
+#
+# for i in r_pentomino:
+#     pygame.draw.circle(screen, [0, 0, 0], i, 15, 0)
 
 dot1 = [field0 + step * 2, field0 + step * 1]
 dot2 = [field0 + step * 3, field0 + step * 2]
@@ -139,7 +137,6 @@ for i in glider:
 
 pygame.display.flip()
 
-#'''
 time.sleep(1)
 for k in range(30):
     born = []
@@ -160,7 +157,6 @@ for k in range(30):
         pygame.draw.circle(screen, [255, 255, 255], i, dot_radius, 0)
     # check = border_check()
     pygame.display.flip()
-#'''
 
 try1 = border_check()
 print(try1)
