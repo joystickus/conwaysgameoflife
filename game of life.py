@@ -4,11 +4,14 @@ from copy import copy
 pygame.init()
 
 # offer user to choose resolution of the window
-resolution_x = 0
-resolution_y = 0
-resolutions = {'640 × 480': [640, 480], '800 × 600': [800, 600], '1024 × 768': [1024, 768],
-                      '1280 × 1024': [1280, 1024], '1440 × 900': [1440, 900], '1680 × 1050': [1680, 1050],
-                      '1920 × 1080': [1920, 1080], '2560 × 1440': [2560, 1440]}
+resolutions = {'640 × 480': [640, 480],
+               '800 × 600': [800, 600],
+               '1024 × 768': [1024, 768],
+               '1280 × 1024': [1280, 1024],
+               '1440 × 900': [1440, 900],
+               '1680 × 1050': [1680, 1050],
+               '1920 × 1080': [1920, 1080],
+               '2560 × 1440': [2560, 1440]}
 resolution_choice = easygui.choicebox("Please select resolution", choices = resolutions.keys(), preselect = 1)
 resolution = resolutions[resolution_choice]
 resolution_x = resolution[0]
@@ -16,10 +19,10 @@ resolution_y = resolution[1]
 screen = pygame.display.set_mode(resolution)
 screen.fill([255, 255, 255])
 
-cell_size = 30
+cell_size = 40
 cell_size_work = copy(cell_size)
 
-#function to scale the field down
+# function to scale the field down
 def scale():
     new_cell_size = int(resolution_x / (int(resolution_x / cell_size_work) + 2))
     return new_cell_size
@@ -61,27 +64,27 @@ def check(x, y):
 # function to check borders
 def border_check():
     top_left_starting_point = field0 + step
-    top_rignt_starting_point = top_left_starting_point + (step * (int(resolution_x / cell_size_work) - 2))
-    bottom_left_starting_point = top_left_starting_point + (step * (int(resolution_y / cell_size_work) - 2))
+    top_rignt_starting_point = top_left_starting_point + (step * (int(resolution_x / cell_size_work) - 3))
+    bottom_left_starting_point = top_left_starting_point + (step * (int(resolution_y / cell_size_work) - 3))
     presence = False
     while not presence:
-        for i in range(int(resolution_x / step - 2)):
+        for i in range(0, int(resolution_x / step - 3)):
             dot_place = [top_left_starting_point + i * step, top_left_starting_point]
             if screen.get_at(dot_place) == (0, 0, 0, 255):
                 presence = True
                 break
-        for i in range(int(resolution_y / step - 2)):
+        for i in range(0, int(resolution_y / step - 3)):
             dot_place = [top_left_starting_point, top_left_starting_point + i * step]
             if screen.get_at(dot_place) == (0, 0, 0, 255):
                 presence = True
                 break
-        for i in range(int(resolution_x / step - 2)):
-            dot_place = [top_rignt_starting_point, top_rignt_starting_point + i * step]
+        for i in range(0, int(resolution_y / step - 3)):
+            dot_place = [top_rignt_starting_point, field0 + step + i * step]
             if screen.get_at(dot_place) == (0, 0, 0, 255):
                 presence = True
                 break
-        for i in range(int(resolution_x / step - 2)):
-            dot_place = [bottom_left_starting_point + i * step, bottom_left_starting_point]
+        for i in range(0, int(resolution_x / step - 3)):
+            dot_place = [field0 + step + i * step, bottom_left_starting_point]
             if screen.get_at(dot_place) == (0, 0, 0, 255):
                 presence = True
                 break
@@ -138,6 +141,7 @@ for k in range(30):
     # check = border_check()
     pygame.display.flip()
 
+pygame.display.flip()
 
 running = True
 while running:
