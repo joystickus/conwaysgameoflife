@@ -1,3 +1,7 @@
+# Надо еще сделать масштабирование по результатам проверки вылезания за пределы поля. Но для этого надо будет
+# переделывать всю логику программы. А я уже крепко заебался и топчусь на месте. Когда разберусь с питоном больше,
+# тогда и переделаю.
+
 import pygame, time, easygui
 from copy import copy
 
@@ -14,18 +18,14 @@ resolutions = {'640 × 480': [640, 480],
                '2560 × 1440': [2560, 1440]}
 resolution_choice = easygui.choicebox("Please select resolution", choices = resolutions.keys(), preselect = 1)
 resolution = resolutions[resolution_choice]
-resolution_x = resolution[0]
-resolution_y = resolution[1]
 screen = pygame.display.set_mode(resolution)
 screen.fill([255, 255, 255])
 
+resolution_x = resolution[0]
+resolution_y = resolution[1]
+
 cell_size = 40
 cell_size_work = copy(cell_size)
-
-# function to scale the field down
-def scale():
-    new_cell_size = int(resolution_x / (int(resolution_x / cell_size_work) + 2))
-    return new_cell_size
 
 field0 = int(cell_size_work / 2)
 step = cell_size_work
@@ -33,16 +33,21 @@ center_field_x = field0 + step * (int(resolution_x / step / 2) - 1)
 center_field_y = field0 + step * (int(resolution_y / step / 2) - 1)
 dot_radius = int((cell_size_work / 2) * 0.7)
 
+# function to scale the field down
+def scale():
+    new_cell_size = int(resolution_x / (int(resolution_x / cell_size_work) + 2))
+    return new_cell_size
+
 # function to check a cell to change state
 def check(x, y):
-    dots = {"dot1": [x - step, y - step],
-            "dot2": [x, y - step],
-            "dot3": [x + step, y - step],
-            "dot4": [x - step, y],
-            "dot5": [x + step, y],
-            "dot6": [x - step, y + step],
-            "dot7": [x, y + step],
-            "dot8": [x + step, y + step]}
+    dots = {"dot_top_left": [x - step, y - step],
+            "dot_top_center": [x, y - step],
+            "dot_top_right": [x + step, y - step],
+            "dot_center_left": [x - step, y],
+            "dot_center_right": [x + step, y],
+            "dot_bottom_left": [x - step, y + step],
+            "dot_bottom_center": [x, y + step],
+            "dot_bottom_right": [x + step, y + step]}
     count = 0
     center = False
     future = ""
@@ -88,7 +93,7 @@ def border_check():
             if screen.get_at(dot_place) == (0, 0, 0, 255):
                 presence = True
                 break
-    return "yes"
+    return "yes" # temporary return, I'll think on it more.
 
 # draw the field
 for i in range(0, resolution_x, step):
@@ -121,7 +126,7 @@ for i in glider:
 pygame.display.flip()
 
 time.sleep(1)
-for k in range(30):
+for k in range(20):
     born = []
     die = []
     time.sleep(0.1)
@@ -138,10 +143,7 @@ for k in range(30):
         pygame.draw.circle(screen, [0, 0, 0], i, dot_radius, 0)
     for i in die:
         pygame.draw.circle(screen, [255, 255, 255], i, dot_radius, 0)
-    # check = border_check()
     pygame.display.flip()
-
-pygame.display.flip()
 
 running = True
 while running:
