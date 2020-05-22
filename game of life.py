@@ -17,12 +17,12 @@ resolutions = {'640 × 480': [640, 480],
                '1920 × 1080': [1920, 1080],
                '2560 × 1440': [2560, 1440]}
 resolution_choice = easygui.choicebox("Please select resolution", choices = resolutions.keys(), preselect = 1)
-resolution = resolutions[resolution_choice]
+resolution = resolution_x, resolution_y = resolutions[resolution_choice]
 screen = pygame.display.set_mode(resolution)
 screen.fill([255, 255, 255])
 
-resolution_x = resolution[0]
-resolution_y = resolution[1]
+# resolution_x = resolution[0]
+# resolution_y = resolution[1]
 
 cell_size = 40
 cell_size_work = copy(cell_size)
