@@ -3,7 +3,7 @@
 import time
 
 # Create a matrix.
-col,row = 5,5
+col,row = 30,30
 table = [[0 for y in range(col)] for x in range(row)]
 # Show an empty matrix.
 for i in range(row):
@@ -60,7 +60,14 @@ y = int(row / 2 - 0.5)
 # Draw an example pattern.
 table [y] [x] = 1
 table [y] [x-1] = 1
+table [y] [x-2] = 1
+table [y] [x-3] = 1
+table [y] [x-4] = 1
 table [y] [x+1] = 1
+table [y] [x+2] = 1
+table [y] [x+3] = 1
+table [y] [x+4] = 1
+table [y] [x+5] = 1
 
 # Give a pause and show the renewed matrix.
 time.sleep(1)
@@ -69,7 +76,7 @@ for i in range(row):
     print(table[i])
 
 # Give it a try
-for i in range(3):
+for i in range(30):
     checkMatrix()
     time.sleep(1)
     print()
