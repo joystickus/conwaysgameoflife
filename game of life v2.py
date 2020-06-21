@@ -70,10 +70,15 @@ table [y] [x+4] = 1
 table [y] [x+5] = 1
 
 # Give a pause and show the renewed matrix.
-time.sleep(1)
-print()
-for i in range(row):
-    print(table[i])
+# time.sleep(1)
+# print()
+# for i in range(row):
+#     print(table[i])
+
+# Lists of dots
+live = []
+born = []
+die = []
 
 # Give it a try
 for i in range(30):
