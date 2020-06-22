@@ -23,23 +23,36 @@ pygame.display.flip()
 
 # Input the pattern.
 # In the future it will be done by the mouse clicks in the field.
-pattern = {"dot1": table [5] [5],
-           "dot2": table [5] [5+1],
-           "dot3": table [5] [5-1]}
+dot1 = [1, 1]
+dot2 = [1, 2]
+dot3 = [1, 3]
+dot4 = [1, 4]
+dot5 = [1, 5]
+pattern = [dot1, dot2, dot3, dot4, dot5]
+for i in range(len(pattern)):
+    table [pattern[i][0]] [pattern[i][1]] = 1
 
-
-# dot1 = table [5] [5] = 1
-# dot2 = table [5] [5+1] = 1
-# dot3 = table [5] [5-1] = 1
 # Show the pattern in the field.
 for i in range(row):
     print(table[i])
 
-# Adding the dots of the pattern to a list.
-
-# Function to calculate the coordinates of the whole pattern in the field.
-
-# Function to center the pattern in the field.
+# Function to calculate the coordinates of the edges of the pattern.
+def calcEdges():
+    topEdge = 0
+    bottomEdge = 0
+    leftEdge = 0
+    rightEdge = 0
+    patternColumns = []
+    patternRows = []
+    for i in range(len(pattern)):
+        patternRows.append(pattern[i][0])
+        patternColumns.append(pattern[i][1])
+        topEdge = min(patternRows)
+        bottomEdge = max(patternRows)
+        leftEdge = min(patternColumns)
+        rightEdge = max(patternColumns)
+    edgesCoordinates = topEdge, bottomEdge, leftEdge, rightEdge
+    return edgesCoordinates
 
 # Function to check a cell.
 def check(rowDotPlace,colDotPlace):
@@ -69,6 +82,10 @@ def check(rowDotPlace,colDotPlace):
         future = "nothing"
     return future
 
+# Function to check the dots of the pattern for changes
+def checkPattern(rowDotPlace,colDotPlace):
+
+
 # Function to check the whole matrix and change its state.
 def checkMatrix():
     born = []
@@ -85,37 +102,30 @@ def checkMatrix():
     for i in range(len(die)):
         table [die[i][0]] [die[i][1]] = 0
 
-# # Calculate the center of the matrix.
-# x = int(col / 2 - 0.5)
-# y = int(row / 2 - 0.5)
-#
-# # Draw an example pattern.
-# table [y] [x] = 1
-# table [y] [x-1] = 1
-# # table [y] [x-2] = 1
-# # table [y] [x-3] = 1
-# # table [y] [x-4] = 1
-# table [y] [x+1] = 1
-# # table [y] [x+2] = 1
-# # table [y] [x+3] = 1
-# # table [y] [x+4] = 1
-# # table [y] [x+5] = 1
+# Center the pattern in the field.
+edges = calcEdges() # get the edges of the pattern
+mx = int(col / 2 - 0.5) # calculate the center of the matrix
+my = int(row / 2 - 0.5)
+py = int((edges[0] + edges[1]) / 2) # calculate the center of the pattern
+px = int((edges[2] + edges[3]) / 2)
+moveY = my - py # calculate the distance to move the pattern to the center
+moveX = mx - px
+for i in range(len(pattern)): # move the pattern to the center
+    pattern[i][0] += moveY
+    pattern[i][1] += moveX
+# flush and redraw the field
+table = [[0 for y in range(col)] for x in range(row)]
+for i in range(len(pattern)):
+    table [pattern[i][0]] [pattern[i][1]] = 1
 
-# Give a pause and show the renewed matrix.
-# time.sleep(1)
-# print()
-# for i in range(row):
-#     print(table[i])
-
-# Lists of dots
-live = []
-born = []
-die = []
+print()
+for i in range(row):
+    print(table[i])
 
 # Give it a try
-for i in range(1):
+for i in range(10):
     checkMatrix()
-    time.sleep(1)
+    time.sleep(0.3)
     print()
     for j in range(row):
         print(table[j])
