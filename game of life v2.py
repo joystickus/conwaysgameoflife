@@ -23,12 +23,9 @@ pygame.display.flip()
 
 # Input the pattern.
 # In the future it will be done by the mouse clicks in the field.
-# pattern = {"dot1": table [5] [5],
-#            "dot2": table [5] [5+1],
-#            "dot3": table [5] [5-1]}
-pattern = {table [5] [5]: 1,
-           table [5] [5+1]: 1,
-           table [5] [5-1]: 1}
+pattern = {"dot1": table [5] [5],
+           "dot2": table [5] [5+1],
+           "dot3": table [5] [5-1]}
 
 
 # dot1 = table [5] [5] = 1
