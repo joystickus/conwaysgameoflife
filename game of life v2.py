@@ -1,4 +1,6 @@
-# This time I'll try a matrix.
+# This is the second version of the Conway's Game of Life. This time I'll try a matrix.
+# Still have to make buttons to control and think of what to do when it reaches edges of the field.
+# And it all of a sudden froze. Don't yet know what to do with that. :(
 
 import time, pygame
 
@@ -7,7 +9,7 @@ pygame.init()
 baseCol,baseRow = 20, 15
 
 # Create a matrix.
-multiplier = 0 # This number means the scale of the matrix: 0,1,2,3 = 20x15,40x30,80x60,160x120.
+multiplier = 1 # This number means the scale of the matrix: 0,1,2,3 = 20x15,40x30,80x60,160x120.
                # It will be changed by the user and depending on the visibility of the pattern.
 col,row = baseCol*(2**multiplier),baseRow*(2**multiplier)
 table = [[0 for y in range(col)] for x in range(row)]
@@ -30,16 +32,17 @@ dot2 = [1, 2]
 dot3 = [1, 3]
 dot4 = [1, 4]
 dot5 = [1, 5]
-pattern = [dot1, dot2, dot3, dot4, dot5]
+dot6 = [1, 6]
+dot7 = [1, 7]
+dot8 = [1, 8]
+dot9 = [1, 9]
+dot10 = [1, 10]
+pattern = [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8, dot9, dot10]
 for dot in pattern:
     table [dot[0]] [dot[1]] = 1
     dotPlace = [int(dot[1]*cellSize+cellSize/2), int(dot[0]*cellSize+cellSize/2)]
     pygame.draw.circle(screen, [0,0,0], dotPlace, dotRadius, 0)
 pygame.display.flip()
-
-# Show the field with pattern in it.
-for i in range(row):
-    print(table[i])
 
 # Function to calculate the coordinates of the edges of the pattern.
 def calcEdges():
@@ -79,6 +82,7 @@ def check(y,x):
 def move():
     die = []
     born = []
+    global table
     for dot in pattern:
         if check(dot[0], dot[1]) == "die":
             die.append(dot)
@@ -94,9 +98,17 @@ def move():
     for dot in born:
         table[dot[0]][dot[1]] = 1
         pattern.append(dot)
-    print()
+    table = [[0 for y in range(col)] for x in range(row)]
+    screen.fill([255, 255, 255])
+    for i in range(col):
+        pygame.draw.line(screen, [0, 0, 0], [i * int(800 / col), 0], [i * int(800 / col), 600], 1)
     for i in range(row):
-        print(table[i])
+        pygame.draw.line(screen, [0, 0, 0], [0, i * int(600 / row)], [800, i * int(600 / row)], 1)
+    for dot in pattern:
+        table [dot[0]] [dot[1]] = 1
+        dotPlace = [int(dot[1]*cellSize+cellSize/2), int(dot[0]*cellSize+cellSize/2)]
+        pygame.draw.circle(screen, [0,0,0], dotPlace, dotRadius, 0)
+    pygame.display.flip()
 
 # Center the pattern in the field.
 edges = calcEdges() # get the edges of the pattern
@@ -109,16 +121,23 @@ moveX = mx - px
 for dot in pattern: # move the pattern to the center
     dot[0] += moveY
     dot[1] += moveX
-# flush and redraw the field
+# pause, flush and redraw the field
+time.sleep(1.5)
 table = [[0 for y in range(col)] for x in range(row)]
-for i in pattern:
-    table [i[0]] [i[1]] = 1
+screen.fill([255,255,255])
+for i in range(col):
+    pygame.draw.line(screen, [0,0,0], [i*int(800/col), 0], [i*int(800/col), 600], 1)
 for i in range(row):
-    print(table[i])
+    pygame.draw.line(screen, [0,0,0], [0, i*int(600/row)], [800, i*int(600/row)], 1)
+for dot in pattern:
+    table [dot[0]] [dot[1]] = 1
+    dotPlace = [int(dot[1]*cellSize+cellSize/2), int(dot[0]*cellSize+cellSize/2)]
+    pygame.draw.circle(screen, [0,0,0], dotPlace, dotRadius, 0)
+pygame.display.flip()
 
 # Give it a try
-for i in range(2):
-    time.sleep(0.3)
+for i in range(30):
+    time.sleep(0.5)
     move()
 
 running = True
