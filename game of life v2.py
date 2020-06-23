@@ -9,7 +9,7 @@ pygame.init()
 baseCol,baseRow = 20, 15
 
 # Create a matrix.
-multiplier = 1 # This number means the scale of the matrix: 0,1,2,3 = 20x15,40x30,80x60,160x120.
+multiplier = 0 # This number means the scale of the matrix: 0,1,2,3 = 20x15,40x30,80x60,160x120.
                # It will be changed by the user and depending on the visibility of the pattern.
 col,row = baseCol*(2**multiplier),baseRow*(2**multiplier)
 table = [[0 for y in range(col)] for x in range(row)]
@@ -32,12 +32,13 @@ dot2 = [1, 2]
 dot3 = [1, 3]
 dot4 = [1, 4]
 dot5 = [1, 5]
-dot6 = [1, 6]
-dot7 = [1, 7]
-dot8 = [1, 8]
-dot9 = [1, 9]
-dot10 = [1, 10]
-pattern = [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8, dot9, dot10]
+# dot6 = [1, 6]
+# dot7 = [1, 7]
+# dot8 = [1, 8]
+# dot9 = [1, 9]
+# dot10 = [1, 10]
+# pattern = [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8, dot9, dot10]
+pattern = [dot1, dot2, dot3, dot4, dot5]
 for dot in pattern:
     table [dot[0]] [dot[1]] = 1
     dotPlace = [int(dot[1]*cellSize+cellSize/2), int(dot[0]*cellSize+cellSize/2)]
@@ -136,7 +137,7 @@ for dot in pattern:
 pygame.display.flip()
 
 # Give it a try
-for i in range(30):
+for i in range(10):
     time.sleep(0.5)
     move()
 
