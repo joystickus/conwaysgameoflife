@@ -9,8 +9,7 @@ baseCol,baseRow = 20, 15
 # Create a matrix.
 multiplier = 0 # This number means the scale of the matrix: 0,1,2,3 = 20x15,40x30,80x60,160x120.
                # It will be changed by the user and depending on the visibility of the pattern.
-# col,row = baseCol*(2**multiplier),baseRow*(2**multiplier)
-col,row = 10,10
+col,row = baseCol*(2**multiplier),baseRow*(2**multiplier)
 table = [[0 for y in range(col)] for x in range(row)]
 
 # Open a white board window based on the matrix.
@@ -27,14 +26,13 @@ pygame.display.flip()
 dot1 = [1, 1]
 dot2 = [1, 2]
 dot3 = [1, 3]
-# dot4 = [1, 4]
-# dot5 = [1, 5]
-# pattern = [dot1, dot2, dot3, dot4, dot5]
-pattern = [dot1, dot2, dot3]
+dot4 = [1, 4]
+dot5 = [1, 5]
+pattern = [dot1, dot2, dot3, dot4, dot5]
 for dot in pattern:
     table [dot[0]] [dot[1]] = 1
 
-# Show the pattern in the field.
+# Show the field with pattern in it.
 for i in range(row):
     print(table[i])
 
@@ -57,87 +55,43 @@ def calcEdges():
     return edgesCoordinates
 
 # Function to check a cell.
-def check(rowDotPlace,colDotPlace):
-    neighbours = {"top": table [rowDotPlace-1] [colDotPlace],
-                  "bottom": table [rowDotPlace+1] [colDotPlace],
-                  "left": table [rowDotPlace] [colDotPlace-1],
-                  "right": table [rowDotPlace] [colDotPlace+1],
-                  "topLeft": table [rowDotPlace-1] [colDotPlace-1],
-                  "topRight": table [rowDotPlace-1] [colDotPlace+1],
-                  "bottomLeft": table [rowDotPlace+1] [colDotPlace-1],
-                  "bottomRight": table [rowDotPlace+1] [colDotPlace+1]}
+def check(y,x):
     count = 0
-    center = False
-    if table [rowDotPlace] [colDotPlace] == 1:
-        center = True
-    for value in neighbours.values():
-        if value == 1:
-            count += 1
-    if center and 2 <= count <= 3:
-        future = "live"
-    elif center and (count < 2 or count > 3):
-        future = "die"
-    elif not center and count == 3:
-        future = "born"
-    else:
-        future = "nothing"
-    return future
-
-# Function to check a cell, v2.
-def check2(rowDotPlace,colDotPlace):
-    count = 0
-    center = False
-    if table [rowDotPlace] [colDotPlace] == 1:
-        center = True
-    for i in range(-1,1):
-        for j in range(-1,1):
-            if table [rowDotPlace + i] [colDotPlace + j] == 1:
+    result = ""
+    for i in range(-1,2):
+        for j in range(-1,2):
+            if table[y+i][x+j] == 1:
                 count += 1
-            if table[rowDotPlace][colDotPlace] == 1:
-                count -= 1
-    if center and 2 <= count <= 3:
-        future = "live"
-    elif center and (count < 2 or count > 3):
-        future = "die"
-    elif not center and count == 3:
-        future = "born"
-    else:
-        future = "nothing"
-    return future
+    if table[y][x] == 1:
+        count -= 1
+    if table[y][x] == 1 and (count > 3 or count < 2):
+        result = "die"
+    elif table[y][x] == 0 and count == 3:
+        result = "born"
+    return result
 
-# Function to check the dots of the pattern for changes
-def checkPattern():
-    born = []
+# Function to make a move.
+def move():
     die = []
-    for i in pattern:
-        for j in range(-1,1):
-            for k in range(-1,1):
-                result = check(i[0]+j, i[1]+k)
-                if result == "die":
-                    die.append(i)
-                elif result == "born":
-                    born.append(i)
-    print("born", born, ", die", die)
-    for i in born:
-        table[i[0]][i[1]] = 1
-    for i in die:
-        table[i[0]][i[1]] = 0
-
-# Function to check the whole matrix and change its state.
-def checkMatrix():
     born = []
-    die = []
-    for i in range(1, row-1):
-        for j in range(1, col-1):
-            result = check(i,j)
-            if result == "born":
-                born.append([i,j])
-            elif result == "die":
-                die.append([i,j])
-    for i in born:
-        table [i[0]] [i[1]] = 1
-    for i in die:
-        table [i[0]] [i[1]] = 0
+    for dot in pattern:
+        if check(dot[0], dot[1]) == "die":
+            die.append(dot)
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                dotx = dot[0] + i, dot[1] + j
+                if check(dotx[0], dotx[1]) == "born":
+                    born.append(list(dotx))
+    for dot in die:
+        table[dot[0]][dot[1]] = 0
+        if dot in pattern:
+            pattern.remove(dot)
+    for dot in born:
+        table[dot[0]][dot[1]] = 1
+        pattern.append(dot)
+    print()
+    for i in range(row):
+        print(table[i])
 
 # Center the pattern in the field.
 edges = calcEdges() # get the edges of the pattern
@@ -147,25 +101,20 @@ py = int((edges[0] + edges[1]) / 2) # calculate the center of the pattern
 px = int((edges[2] + edges[3]) / 2)
 moveY = my - py # calculate the distance to move the pattern to the center
 moveX = mx - px
-for i in pattern: # move the pattern to the center
-    i[0] += moveY
-    i[1] += moveX
+for dot in pattern: # move the pattern to the center
+    dot[0] += moveY
+    dot[1] += moveX
 # flush and redraw the field
 table = [[0 for y in range(col)] for x in range(row)]
 for i in pattern:
     table [i[0]] [i[1]] = 1
-
-print(pattern)
 for i in range(row):
     print(table[i])
 
 # Give it a try
-for i in range(3):
-    checkPattern()
+for i in range(10):
     time.sleep(0.3)
-    print()
-    for j in range(row):
-        print(table[j])
+    move()
 
 running = True
 while running:
