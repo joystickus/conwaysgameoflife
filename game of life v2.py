@@ -18,7 +18,9 @@ dotRadius = int(cellSize/2*0.8)
 
 # Open a white board window based on the matrix.
 screen = pygame.display.set_mode([800,600])
-screen.fill([255,255,255])
+background = pygame.Surface(screen.get_size())
+background.fill([255,255,255])
+clock = pygame.time.Clock()
 for i in range(col):
     pygame.draw.line(screen, [0,0,0], [i*int(800/col), 0], [i*int(800/col), 600], 1)
 for i in range(row):
@@ -111,6 +113,33 @@ def move():
         pygame.draw.circle(screen, [0,0,0], dotPlace, dotRadius, 0)
     pygame.display.flip()
 
+# Function to make a move — the whole matrix.
+def move2():
+    die = []
+    born = []
+    global table
+    for i in range(1,row-1):
+        for j in range(1,col-1):
+            if check(i,j) == "die":
+                die.append([i,j])
+            if check(i, j) == "born":
+                born.append([i, j])
+    table = [[0 for y in range(col)] for x in range(row)]
+    screen.blit(background, (0,0))
+    for i in range(col):
+        pygame.draw.line(screen, [0, 0, 0], [i * int(800 / col), 0], [i * int(800 / col), 600], 1)
+    for i in range(row):
+        pygame.draw.line(screen, [0, 0, 0], [0, i * int(600 / row)], [800, i * int(600 / row)], 1)
+    for dot in die:
+        table[dot[0]][dot[1]] = 0
+        dotPlace = [int(dot[1] * cellSize + cellSize / 2), int(dot[0] * cellSize + cellSize / 2)]
+        pygame.draw.circle(screen, [255, 255, 255], dotPlace, dotRadius, 0)
+    for dot in born:
+        table[dot[0]][dot[1]] = 1
+        dotPlace = [int(dot[1] * cellSize + cellSize / 2), int(dot[0] * cellSize + cellSize / 2)]
+        pygame.draw.circle(screen, [0, 0, 0], dotPlace, dotRadius, 0)
+    pygame.display.flip()
+
 # Center the pattern in the field.
 edges = calcEdges() # get the edges of the pattern
 mx = int(col / 2 - 0.5) # calculate the center of the matrix
@@ -125,7 +154,7 @@ for dot in pattern: # move the pattern to the center
 # pause, flush and redraw the field
 time.sleep(1.5)
 table = [[0 for y in range(col)] for x in range(row)]
-screen.fill([255,255,255])
+screen.blit(background, (0,0))
 for i in range(col):
     pygame.draw.line(screen, [0,0,0], [i*int(800/col), 0], [i*int(800/col), 600], 1)
 for i in range(row):
@@ -137,13 +166,18 @@ for dot in pattern:
 pygame.display.flip()
 
 # Give it a try
-for i in range(10):
-    time.sleep(0.5)
-    move()
+# for i in range(8):
+#     # time.sleep(0.5)
+#     move()
+#     clock.tick(30)
 
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            frame_rate = clock.get_fps()
+            print("frame rate =", frame_rate)
+    clock.tick(10)
+    move()
 pygame.quit()
