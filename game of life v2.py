@@ -13,6 +13,7 @@ multiplier = 1 # This number means the scale of the matrix: 0,1,2,3 = 20x15,40x3
                # It will be changed by the user and depending on the visibility of the pattern.
 col,row = baseCol*(2**multiplier),baseRow*(2**multiplier)
 matrix = [[0 for y in range(col)] for x in range(row)]
+pattern = [] # Empty container for for pattern.
 
 # Prepare the field.
 screen = pygame.display.set_mode([800,600])
@@ -75,27 +76,19 @@ def move():
         Dot1(i[0],i[1])
     pygame.display.flip()
 
-# Input the pattern.
-# In the future it will be done by the mouse clicks in the field.
-dot1 = [1, 1]
-dot2 = [1, 2]
-dot3 = [1, 3]
-dot4 = [1, 4]
-dot5 = [1, 5]
-dot6 = [1, 6]
-dot7 = [1, 7]
-dot8 = [1, 8]
-dot9 = [1, 9]
-dot10 = [1, 10]
-pattern = [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8, dot9, dot10]
-# pattern = [dot1, dot2, dot3, dot4, dot5]
-for i in pattern:
-    matrix[i[0]][i[1]] = 1
-    Dot1(i[0], i[1])
-pygame.display.flip()
-print()
-for i in range(row):
-    print(matrix[i])
+# Function to get the mouse clicks.
+def click(eventPos):
+    y, x = int(eventPos[1] / cellSize), int(eventPos[0] / cellSize)
+    if matrix[y][x] == 0:
+        matrix[y][x] = 1
+        Dot1(y,x)
+        pattern.append([y,x])
+        pygame.display.flip()
+    elif matrix[y][x] == 1:
+        matrix[y][x] = 0
+        Dot0(y,x)
+        pattern.remove([y,x])
+        pygame.display.flip()
 
 # Function to calculate the coordinates of the edges of the pattern.
 def calcEdges():
@@ -115,6 +108,16 @@ def calcEdges():
     edgesCoordinates = topEdge, bottomEdge, leftEdge, rightEdge
     return edgesCoordinates
 
+# Input the pattern.
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            click(event.pos)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                running = False
+
 # Center the pattern in the field.
 edges = calcEdges() # get the edges of the pattern
 mx = int(col / 2 - 0.5) # calculate the center of the matrix
@@ -126,8 +129,7 @@ moveX = mx - px
 for dot in pattern: # move the pattern to the center
     dot[0] += moveY
     dot[1] += moveX
-# pause, flush and redraw the field
-clock.tick(1)
+# Flush and redraw the field. And pause.
 matrix = [[0 for y in range(col)] for x in range(row)]
 screen.blit(background, (0,0))
 for i in range(col):
@@ -138,9 +140,7 @@ for i in pattern:
     matrix[i[0]][i[1]] = 1
     Dot1(i[0], i[1])
 pygame.display.flip()
-print()
-for i in range(row):
-    print(matrix[i])
+time.sleep(1)
 
 # It'll work until the window is X-button closed.
 running = True
