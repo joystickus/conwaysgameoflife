@@ -142,11 +142,7 @@ print()
 for i in range(row):
     print(matrix[i])
 
-# Give it a try
-for i in range(30):
-    clock.tick(3)
-    move()
-
+# It'll work until the window is X-button closed.
 running = True
 while running:
     for event in pygame.event.get():
@@ -154,4 +150,6 @@ while running:
             running = False
             frame_rate = clock.get_fps()
             print("frame rate =", frame_rate)
+    clock.tick(10)
+    move()
 pygame.quit()
